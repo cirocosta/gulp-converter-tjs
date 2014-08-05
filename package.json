@@ -1,0 +1,23 @@
+{
+  "name": "cvc-converter",
+  "description": "",
+  "version": "0.0.1",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cirocosta/cvc-converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cirocosta/cvc-converter/issues"
+  },
+  "homepage": "https://github.com/cirocosta/cvc-converter",
+  "dependencies": {
+    "xml-stream": "^0.4.4"
+  },
+  "devDependencies": {}
+}
