@@ -1,6 +1,6 @@
 {
   "name": "cvc-converter",
-  "description": "",
+  "description": "Converts old type of OpenCV HaarCascade xml data to the new one.",
   "version": "0.0.1",
   "main": "src/main.js",
   "scripts": {
