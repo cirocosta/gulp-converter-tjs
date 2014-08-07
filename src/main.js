@@ -3,25 +3,7 @@ var fs = require('fs')
 	,	XmlStream = require('xml-stream')
 	,	filename = path.resolve(__dirname, '../files/eye.xml')
 	,	stream = fs.createReadStream(filename)
-	,	xml = new XmlStream(stream)
-	,	count = 0;
-
-// var haarStruct = {
-//   typeId: '',
-//   size: {
-//     width: 0,
-//     height: 0
-//   },
-//   stages: {
-//     count: 0,
-//   },
-//   stages: {
-//     counts: [],
-//     thresholds: []
-//   },
-//   rects: []
-// };
-
+	,	xml = new XmlStream(stream);
 
 function printItem (item) {
   console.log('---- ', JSON.stringify(item, undefined, 2));
@@ -42,13 +24,13 @@ var haarStruct = {
 
 xml.collect('_');
 
-// xml.on('endElement: cascade > height', function (item) {
-//   haarStruct.cascadeSize.height = +item['$text'];
-// });
+xml.on('endElement: cascade > height', function (item) {
+  haarStruct.cascadeSize.height = +item['$text'];
+});
 
-// xml.on('endElement: cascade > width', function (item) {
-//   haarStruct.cascadeSize.width = +item['$text'];
-// });
+xml.on('endElement: cascade > width', function (item) {
+  haarStruct.cascadeSize.width = +item['$text'];
+});
 
 xml.on('endElement: stages > _', function (item) {
   var stage = {
@@ -56,7 +38,9 @@ xml.on('endElement: stages > _', function (item) {
     nodes: []
   };
 
-  for (var i in item.weakClassifiers['_']) {
+  stage.nnodes = item.weakClassifiers['_'].length;
+
+  for (var i = 0 ; i < stage.nnodes; i++) {
     var internalNodes = item
                           .weakClassifiers['_'][i]
                           .internalNodes.split(' ');
@@ -76,12 +60,13 @@ xml.on('endElement: stages > _', function (item) {
 
   haarStruct.nstages++;
   haarStruct.stages.push(stage);
-
-  printItem(stage);
 });
 
-xml.on('endElement: _ > rects', function(item) {
-	haarStruct.rects.push(item['_']);
+xml.on('endElement: features > _', function(item) {
+	haarStruct.rects.push({
+    data: item.rects['_'],
+    tilted: item.tilted ? 1 : 0
+  });
 });
 
 xml.on('end', function () {
