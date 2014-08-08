@@ -17,7 +17,14 @@
   },
   "homepage": "https://github.com/cirocosta/cvc-converter",
   "dependencies": {
+    "gulp-util": "^3.0.0",
+    "through2": "^0.5.1",
     "xml-stream": "^0.4.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "event-stream": "^3.1.7",
+    "gulp": "^3.8.7",
+    "mocha": "^1.21.4",
+    "vinyl": "^0.3.2"
+  }
 }
