@@ -83,8 +83,7 @@ ConverterTJS.prototype.convert = function (stream, cb) {
   });
 };
 
-ConverterTJS.prototype.toTJS = function (source) {
-  var orig = JSON.parse(fs.readFileSync(source, {encoding: 'utf8'}));
+ConverterTJS.prototype.toTJS = function (orig) {
   var results = [];
   var f = 0;
 

@@ -26,8 +26,10 @@ describe('converter', function() {
   describe('toTJS', function() {
     it('should convert by passing source and dest', function() {
       var fileRes = fs.readFileSync(filename.replace('.xml', '-tjs.json'));
+      var orig = fs.readFileSync(filename.replace('.xml', '.json'));
+
       var expected = JSON.parse(fileRes);
-      var actual = converter.toTJS(filename.replace('.xml', '.json'));
+      var actual = converter.toTJS(JSON.parse(orig));
 
       assert.deepEqual(actual, expected)
     });
