@@ -1,8 +1,12 @@
+/**
+ * Example of a gulpfile
+ */
+
 var gulp = require('gulp');
-var converterTjs = require('./src/gulp-converter-tjs');
+var converterTjs = require('./src/converter-tjs-transform');
 
 gulp.task('default', function () {
-  gulp.src('./files/xml.xml', {buffer: true})
+  gulp.src('./test/files/*.xml')
     .pipe(converterTjs())
     .pipe(gulp.dest('./modified-files'));
 });

@@ -43,7 +43,7 @@
  the use of this software, even if advised of the possibility of such damage.
 -->
 <opencv_storage>
-	<cascade type_id="opencv-cascade-classifier">
+	<cascade typ_id="opencv-cascade-classifier">
 		<stageType>BOOST</stageType>
 		<featureType>HAAR</featureType>
 		<height>20</height>

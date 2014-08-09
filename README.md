@@ -1,4 +1,4 @@
-# cvc-converter
+# gulp-cvc-converter
 
 > Converts old type of OpenCV HaarCascade xml data to the new one.
 
@@ -7,6 +7,17 @@
 *cvc-converter* takes a XML of opencv training data (new type), parses it to an internal representation (javascript object) and then pushes to its stdout the tracking.js format of it.
 
 ### Example
+
+```javascript
+var gulp = require('gulp');
+var converterTjs = require('./src/converter-tjs-transform');
+
+gulp.task('default', function () {
+  gulp.src('./test/files/eye.xml')
+    .pipe(converterTjs())
+    .pipe(gulp.dest('./modified-files'));
+});
+```
 
 ```xml
 <?xml version="1.0"?>

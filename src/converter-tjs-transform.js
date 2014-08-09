@@ -1,6 +1,8 @@
 var through = require('through2');
 var converter = require('./converter-tjs')();
 var Readable = require('stream').Readable || require('readable-stream');
+var PluginError = require('gulp-util').PluginError;
+var PLUGIN_NAME = 'gulp-converter-tjs';
 
 /**
  * Creates a stream w/ data.
@@ -20,10 +22,17 @@ function ConverterTJS () {
   if (!(this instanceof ConverterTJS))
     return new ConverterTJS();
 
-  function _transform (chunk, enc, callback) {
-    if (!this._body) this._body = '';
+  function _transform (file, enc, callback) {
+    if (file.isStream()) {
+      this.emit('error', new PluginError(PLUGIN_NAME, 'Streams are not supported!'));
+      return callback();
+    }
 
-    this._body += chunk.toString();
+    this.file = file;
+
+    if (!this._body)
+      this._body = '';
+    this._body += file.contents.toString();
 
     callback();
   }
@@ -32,12 +41,14 @@ function ConverterTJS () {
     var scope = this;
     var stream = createStream(this._body);
 
+    stream.on('error', this.emit.bind(this, 'error'));
     converter.convert(stream, function (err, data) {
-      if (err) scope.emit('error', err);
+      if (err)
+        return (scope.emit('error', new PluginError(PLUGIN_NAME, err)),
+                callback());
 
-      var d = JSON.stringify(converter.toTJS(data));
-
-      scope.push(d, 'utf8');
+      scope.file.contents = new Buffer(JSON.stringify(converter.toTJS(data)));
+      scope.push(scope.file);
       callback();
     });
   }
