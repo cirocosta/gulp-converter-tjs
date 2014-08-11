@@ -1,10 +1,10 @@
 # gulp-cvc-converter
 
-> Converts old type of OpenCV HaarCascade xml data to the new one.
+> Converts new type of OpenCV HaarCascade XML data to the new one.
 
 ## Process
 
-*cvc-converter* takes a XML of opencv training data (new type), parses it to an internal representation (javascript object) and then pushes to its stdout the tracking.js format of it.
+*cvc-converter* takes a XML of OpenCV training data (new type), parses it to an internal representation (JavaScript object) and then pushes to its standard output the *tracking.js* format of it.
 
 ### Example
 
@@ -98,6 +98,14 @@ turns into
 
 which turns into
 
-```json
+```javascript
 [20,20,-1.4562760591506958,1,1,2,0,8,20,12,-1,0,14,20,6,2,0.12963959574699402,0,-1]
+
+// which is similar to a flattened nested array w/ loops ('[]') like the following:
+
+[width, height,
+	[stageThreshold, nodeLength,
+		[tilted, rectsLength,
+			[rL, rT, rW, rH, rWeigth]
+		 nThreshold, nL, nR]]]
 ```

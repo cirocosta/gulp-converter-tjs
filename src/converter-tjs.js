@@ -49,14 +49,17 @@ ConverterTJS.prototype.convert = function (stream, cb) {
       var internalNodes = item
                             .weakClassifiers['_'][i]
                             .internalNodes.split(' ');
+      var leafValues = item
+                          .weakClassifiers['_'][i]
+                          .leafValues.split(' ');
       var node = {
         left_val: '',
         right_val: '',
         threshold: ''
       };
 
-      node.left_val = parseFloat(internalNodes[0]);
-      node.right_val = parseFloat(internalNodes[1]);
+      node.left_val = parseFloat(leafValues[0]);
+      node.right_val = parseFloat(leafValues[1]);
       node.f = +internalNodes[2];
       node.threshold = parseFloat(internalNodes[3]);
 
@@ -82,6 +85,7 @@ ConverterTJS.prototype.convert = function (stream, cb) {
     cb(null, haarStruct);
   });
 };
+
 
 ConverterTJS.prototype.toTJS = function (orig) {
   var results = [];
