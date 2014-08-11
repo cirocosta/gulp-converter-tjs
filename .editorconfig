@@ -12,5 +12,9 @@ insert_final_newline = true
 [*.js]
 indent_style = space
 
+[*.yml]
+indent_style = space
+
+
 [*.xml]
 insert_final_newline = false
