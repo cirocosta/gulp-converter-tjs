@@ -29,34 +29,24 @@ function ConverterTJS () {
       return (this.emit('error', new PluginError(NAME, 'Streams are not supported!')),
               callback());
 
-    this.file = file;
-
     if (file.isBuffer()) {
-      if (!this._body)
-        this._body = '';
-      this._body += file.contents.toString();
+      var stream = createStream(file.contents.toString());
+      var scope = this;
 
-      callback();
+      stream.on('error', this.emit.bind(this, 'error'));
+      converter.convert(stream, function (err, data) {
+        if (err)
+          return (scope.emit('error', new PluginError(NAME, err)),
+                  callback());
+
+        file.contents = new Buffer(JSON.stringify(converter.toTJS(data)));
+        scope.push(file);
+        callback();
+      });
     }
   }
 
-  function _flush (callback) {
-    var scope = this;
-    var stream = createStream(this._body);
-
-    stream.on('error', this.emit.bind(this, 'error'));
-    converter.convert(stream, function (err, data) {
-      if (err)
-        return (scope.emit('error', new PluginError(NAME, err)),
-                callback());
-
-      scope.file.contents = new Buffer(JSON.stringify(converter.toTJS(data)));
-      scope.push(scope.file);
-      callback();
-    });
-  }
-
-  return through.obj(_transform, _flush);
+  return through.obj(_transform);
 }
 
 module.exports = ConverterTJS;
