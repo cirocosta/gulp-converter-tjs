@@ -36,8 +36,8 @@ describe('converterTransform', function() {
       converter.write(file);
       converter.end();
 
-      converter.once('data', function (file) {
-        var actual = JSON.parse(file.contents.toString());
+      converter.once('data', function (f) {
+        var actual = JSON.parse(f.contents.toString());
         var expected = JSON.parse(
           fs.readFileSync(path + '/eye-tjs.json'));
 

@@ -1,19 +1,19 @@
-# gulp-cvc-converter
+# gulp-converter-tjs
 
 > Converts new type of OpenCV HaarCascade XML data to the new one.
 
 ## Process
 
-*cvc-converter* takes a XML of OpenCV training data (new type), parses it to an internal representation (JavaScript object) and then pushes to its standard output the *tracking.js* format of it.
+*converter-tjs* takes a XML of OpenCV training data (new type), parses it to an internal representation (JavaScript object) and then pushes to its standard output the *tracking.js* format of it.
 
 ### Example
 
 ```javascript
 var gulp = require('gulp');
-var converterTjs = require('./src/converter-tjs-transform');
+var converterTjs = require('gulp-converter-tjs');
 
 gulp.task('default', function () {
-  gulp.src('./test/files/eye.xml')
+  gulp.src('./test/files/haarcascade_frontalface_alt.xml')
     .pipe(converterTjs())
     .pipe(gulp.dest('./modified-files'));
 });
@@ -69,8 +69,8 @@ turns into
       "stageThreshold": -1.4562760591506958,
       "nodes": [
         {
-          "left_val": 0,
-          "right_val": -1,
+          "left_val": -0.77304208278656006,
+          "right_val": -0.68350148200988770,
           "threshold": 0.12963959574699402,
           "f": 0
         }
@@ -99,7 +99,7 @@ turns into
 which turns into
 
 ```javascript
-[20,20,-1.4562760591506958,1,1,2,0,8,20,12,-1,0,14,20,6,2,0.12963959574699402,0,-1]
+[20,20,-1.4562760591506958,1,1,2,0,8,20,12,-1,0,14,20,6,2,0.12963959574699402, -0.77304208278656006,-0.68350148200988770]
 
 // which is similar to a flattened nested array w/ loops ('[]') like the following:
 
