@@ -1,12 +1,12 @@
 {
   "name": "cvc-converter",
-  "description": "Converts old type of OpenCV HaarCascade xml data to the new one.",
-  "version": "0.0.1",
-  "main": "src/main.js",
+  "description": "Converts new type of OpenCV HaarCascade xml data to tracking.js internal rep",
+  "version": "0.0.2",
+  "main": "src/converter-tjs-transform.js",
   "scripts": {
     "test": "mocha test"
   },
-  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com.br/)",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "gulp": "^3.8.7",
-    "mocha": "^1.21.4"
+    "mocha": "^1.21.4",
+    "vinyl": "^0.3.2"
   }
 }

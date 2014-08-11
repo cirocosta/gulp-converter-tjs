@@ -1,8 +1,10 @@
-var through = require('through2');
-var converter = require('./converter-tjs')();
-var Readable = require('stream').Readable || require('readable-stream');
-var PluginError = require('gulp-util').PluginError;
-var PLUGIN_NAME = 'gulp-converter-tjs';
+'use strict';
+
+var through = require('through2')
+  , converter = require('./converter-tjs')()
+  , Readable = require('stream').Readable || require('readable-stream')
+  , PluginError = require('gulp-util').PluginError
+  , NAME = 'gulp-converter-tjs';
 
 /**
  * Creates a stream w/ data.
@@ -23,18 +25,19 @@ function ConverterTJS () {
     return new ConverterTJS();
 
   function _transform (file, enc, callback) {
-    if (file.isStream()) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'Streams are not supported!'));
-      return callback();
-    }
+    if (file.isStream())
+      return (this.emit('error', new PluginError(NAME, 'Streams are not supported!')),
+              callback());
 
     this.file = file;
 
-    if (!this._body)
-      this._body = '';
-    this._body += file.contents.toString();
+    if (file.isBuffer()) {
+      if (!this._body)
+        this._body = '';
+      this._body += file.contents.toString();
 
-    callback();
+      callback();
+    }
   }
 
   function _flush (callback) {
@@ -44,7 +47,7 @@ function ConverterTJS () {
     stream.on('error', this.emit.bind(this, 'error'));
     converter.convert(stream, function (err, data) {
       if (err)
-        return (scope.emit('error', new PluginError(PLUGIN_NAME, err)),
+        return (scope.emit('error', new PluginError(NAME, err)),
                 callback());
 
       scope.file.contents = new Buffer(JSON.stringify(converter.toTJS(data)));

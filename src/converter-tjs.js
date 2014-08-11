@@ -4,12 +4,24 @@ var fs = require('fs')
   , path = require('path')
   , XmlStream = require('xml-stream');
 
-
+/**
+ * Constructor
+ */
 function ConverterTJS () {
   if (!(this instanceof ConverterTJS))
     return new ConverterTJS();
 }
 
+/**
+ * Converts the new type of opencv haarcascade
+ * classifiers to an internal representation.
+ * @param  {stream}   stream stream of xml
+ * @param  {Function} cb     callback function
+ *                           to be resolved with
+ *                           (err|data), w/ data
+ *                           being the result
+ *                           structure
+ */
 ConverterTJS.prototype.convert = function (stream, cb) {
   if (!stream)
     throw new Error('A stream must be passed');
@@ -86,7 +98,15 @@ ConverterTJS.prototype.convert = function (stream, cb) {
   });
 };
 
-
+/**
+ * Converts from the internal structure to
+ * tracking.js-ready opencv representation of
+ * haarcascade classifiers
+ * @param  {Object} orig the internal rep of the
+ *                       xml passed to convert
+ * @return {[type]}      the tracking.js-ready
+ *                           rep
+ */
 ConverterTJS.prototype.toTJS = function (orig) {
   var results = [];
   var f = 0;

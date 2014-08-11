@@ -5,8 +5,8 @@
       "stageThreshold": -1.4562760591506958,
       "nodes": [
         {
-          "left_val": 0,
-          "right_val": -1,
+          "left_val": -0.7730420827865601,
+          "right_val": 0.6835014820098877,
           "threshold": 0.12963959574699402,
           "f": 0
         }
