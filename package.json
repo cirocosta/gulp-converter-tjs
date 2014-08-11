@@ -1,26 +1,29 @@
 {
-  "name": "cvc-converter",
-  "description": "Converts old type of OpenCV HaarCascade xml data to the new one.",
-  "version": "0.0.1",
-  "main": "src/main.js",
+  "name": "gulp-converter-tjs",
+  "description": "Converts new type of OpenCV HaarCascade xml data to tracking.js internal rep",
+  "version": "0.0.2",
+  "main": "src/converter-tjs-transform.js",
   "scripts": {
     "test": "mocha test"
   },
-  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com.br/)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cirocosta/cvc-converter.git"
+    "url": "https://github.com/cirocosta/gulp-converter-tjs.git"
   },
   "bugs": {
-    "url": "https://github.com/cirocosta/cvc-converter/issues"
+    "url": "https://github.com/cirocosta/gulp-converter-tjs/issues"
   },
-  "homepage": "https://github.com/cirocosta/cvc-converter",
+  "homepage": "https://github.com/cirocosta/gulp-converter-tjs",
   "dependencies": {
+    "gulp-util": "^3.0.0",
     "through2": "^0.5.1",
     "xml-stream": "^0.4.4"
   },
   "devDependencies": {
-    "mocha": "^1.21.4"
+    "gulp": "^3.8.7",
+    "mocha": "^1.21.4",
+    "vinyl": "^0.3.2"
   }
 }

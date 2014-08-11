@@ -1,7 +1,9 @@
-var assert = require('assert');
-var ConverterTJS = require('../src/converter-tjs');
-var fs = require('fs');
-var filename = require('path').resolve(__dirname, './files/eye.xml');
+'use strict';
+
+var assert = require('assert')
+  , ConverterTJS = require('../src/converter-tjs')
+  , fs = require('fs')
+  , filename = require('path').resolve(__dirname, './files/eye.xml');
 
 describe('converter', function() {
   it('should be sane', function() {
@@ -17,6 +19,7 @@ describe('converter', function() {
         if (err) done(err);
 
         var expected = fs.readFileSync(filename.replace('.xml', '.json'));
+
         assert.deepEqual(result, JSON.parse(expected));
         done();
       })
