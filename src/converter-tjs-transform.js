@@ -20,9 +20,11 @@ function createStream (data) {
 /**
  * The transform itself
  */
-function ConverterTJS () {
+function ConverterTJS (old) {
   if (!(this instanceof ConverterTJS))
-    return new ConverterTJS();
+    return new ConverterTJS(old);
+
+  var convert = old ? converter.convertOld : converter.convert;
 
   function _transform (file, enc, callback) {
     if (file.isStream())
@@ -34,7 +36,7 @@ function ConverterTJS () {
       var scope = this;
 
       stream.on('error', this.emit.bind(this, 'error'));
-      converter.convert(stream, function (err, data) {
+      convert(stream, function (err, data) {
         if (err)
           return (scope.emit('error', new PluginError(NAME, err)),
                   callback());

@@ -1,0 +1,31 @@
+<opencv_storage>
+	<classifier_OjoI_18_12_SIANIfacity type_id="opencv-haar-classifier">
+		<size>18 12</size>
+		<stages>
+			<_>
+				<!-- stage 0 -->
+				<trees>
+					<_>
+						<!-- tree 0 -->
+						<_>
+							<!-- root node -->
+							<feature>
+								<rects>
+									<_>3 0 12 12 -1.</_>
+									<_>7 4 4 4 9.</_>
+								</rects>
+								<tilted>0</tilted>
+							</feature>
+							<threshold>-5.4611408710479736e-001</threshold>
+							<left_val>8.2068818807601929e-001</left_val>
+							<right_val>-7.5621801614761353e-001</right_val>
+						</_>
+					</_>
+				</trees>
+				<stage_threshold>-1.9446439743041992e+000</stage_threshold>
+				<parent>-1</parent>
+				<next>-1</next>
+			</_>
+		</stages>
+	</classifier_OjoI_18_12_SIANIfacity>
+</opencv_storage>
