@@ -15,7 +15,7 @@ function createStream (data) {
   return rs;
 }
 
-describe('converter', function() {
+describe('converter\'s', function() {
   it('should be sane', function() {
     assert(!!ConverterTJS);
   });
@@ -23,7 +23,7 @@ describe('converter', function() {
   var converter = new ConverterTJS();
   var filesPath = path.resolve(__dirname, './files');
 
-  describe('convert', function() {
+  describe('convert method', function() {
     it('should convert directly from a stream', function(done) {
       var stream = fs.createReadStream(filesPath + '/eye.xml',
                                        {encoding: 'utf8'});
@@ -66,7 +66,7 @@ describe('converter', function() {
     });
   });
 
-  describe('convertOld', function() {
+  describe('convertOld method', function() {
     it('should convert directly from a stream', function(done) {
       var stream = fs.createReadStream(filesPath + '/leye-old.xml',
                                        {encoding: 'utf8'});
@@ -82,7 +82,7 @@ describe('converter', function() {
     });
   });
 
-  describe('toTJS', function() {
+  describe('toTJS method', function() {
     it('should convert a haarStruct from the new type of xml', function() {
       var fileRes = fs.readFileSync(filesPath + '/eye-tjs.json');
       var orig = fs.readFileSync(filesPath + '/eye.json');

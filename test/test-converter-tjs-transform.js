@@ -14,11 +14,8 @@ describe('converterTransform', function() {
 
   var converter;
 
-  beforeEach(function () {
-    converter = converterTjs();
-  });
-
   it('should not deal with gulp streams', function(done) {
+    converter = converterTjs();
     var stream = fs.createReadStream(path + '/eye.xml');
     var file = new File({contents: stream});
 
@@ -29,7 +26,13 @@ describe('converterTransform', function() {
     done();
   });
 
-  it('should deal with gulp buffers', function(done) {
+  describe('Regarding the new format', function() {
+
+    beforeEach(function () {
+      converter = converterTjs();
+    });
+
+    it('should deal with gulp buffers', function(done) {
       var xml = fs.readFileSync(path + '/eye.xml');
       var file = new File({contents: new Buffer(xml)});
 
@@ -45,4 +48,31 @@ describe('converterTransform', function() {
         done();
       });
     });
+  });
+
+
+  describe('Regarding the Old format', function() {
+
+    beforeEach(function () {
+      converter = converterTjs('old');
+    });
+
+    it('should deal with gulp buffers regarding old format', function(done) {
+      var xml = fs.readFileSync(path + '/leye-old.xml');
+      var file = new File({contents: new Buffer(xml)});
+
+      converter.write(file);
+      converter.end();
+
+      converter.once('data', function (f) {
+        var actual = JSON.parse(f.contents.toString());
+        var expected = JSON.parse(
+          fs.readFileSync(path + '/leye-old-tjs.json'));
+
+        assert.deepEqual(actual, expected);
+        done();
+      });
+    });
+  });
+
 });
