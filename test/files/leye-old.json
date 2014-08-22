@@ -1,0 +1,32 @@
+{
+  "nstages": 1,
+  "stages": [
+    {
+      "stageThreshold": -1.9446439743041992,
+      "nodes": [
+        {
+          "left_val": 0.8206881880760193,
+          "right_val": -0.7562180161476135,
+          "threshold": -0.5461140871047974,
+          "f": 0
+        }
+      ],
+      "nnodes": 1
+    }
+  ],
+  "rects": [
+    {
+      "data": [
+        "3 0 12 12 -1.",
+        "7 4 4 4 9."
+      ],
+      "tilted": 0
+    }
+  ],
+  "maxWeakCount": 0,
+  "cascadeSize": {
+    "width": 18,
+    "height": 12
+  },
+  "maxCatCount": 0
+}

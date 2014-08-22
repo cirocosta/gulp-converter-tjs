@@ -12,6 +12,75 @@ function ConverterTJS () {
     return new ConverterTJS();
 }
 
+ConverterTJS.prototype.convertOld = function(stream, cb) {
+  if (!stream)
+    throw new Error('As stream must be passed');
+
+  var xml = new XmlStream(stream);
+  var f = 0;
+  var haarStruct = {
+    nstages: 0,
+    stages: [],
+    rects: [],
+    maxWeakCount: 0,
+    cascadeSize: {
+      width: 0,
+      height: 0
+    },
+    maxCatCount: 0
+  };
+
+  xml.collect('_');
+
+  xml.on('endElement: size', function (item) {
+    var sizes = item['$text'].split(' ');
+
+    haarStruct.cascadeSize.width = +sizes[0];
+    haarStruct.cascadeSize.height = +sizes[1];
+  });
+
+
+  xml.on('error', function (err) {
+    cb(err);
+  });
+
+
+  xml.on('endElement: stages > _', function (item) {
+    var trees = item.trees._;
+    var stage = {
+      stageThreshold: parseFloat(item.stage_threshold),
+      nodes: []
+    };
+
+    stage.nnodes = trees.length;
+
+    for (var i in trees) {
+      var tree = trees[i]._;
+      var node = {
+        "left_val": parseFloat(tree[0].left_val),
+        "right_val": parseFloat(tree[0].right_val),
+        "threshold": parseFloat(tree[0].threshold),
+        "f": f++
+      };
+
+      stage.nodes.push(node);
+
+      haarStruct.rects.push({
+        data: tree[0].feature.rects._,
+        tilted: +tree[0].feature.tilted
+      });
+    }
+
+    haarStruct.nstages++;
+    haarStruct.stages.push(stage);
+  });
+
+  xml.on('end', function () {
+    // console.log(JSON.stringify(haarStruct, undefined, 2));
+    cb(null, haarStruct);
+  });
+};
+
 /**
  * Converts the new type of opencv haarcascade
  * classifiers to an internal representation.
@@ -25,6 +94,9 @@ function ConverterTJS () {
 ConverterTJS.prototype.convert = function (stream, cb) {
   if (!stream)
     throw new Error('A stream must be passed');
+
+  var f = 0;
+  var g = 0;
 
   var xml = new XmlStream(stream);
   var haarStruct = {
@@ -70,6 +142,8 @@ ConverterTJS.prototype.convert = function (stream, cb) {
         threshold: ''
       };
 
+      g++;
+
       node.left_val = parseFloat(leafValues[0]);
       node.right_val = parseFloat(leafValues[1]);
       node.f = +internalNodes[2];
@@ -87,6 +161,8 @@ ConverterTJS.prototype.convert = function (stream, cb) {
       data: item.rects['_'],
       tilted: item.tilted ? 1 : 0
     });
+
+    f++;
   });
 
   xml.on('error', function (err) {
@@ -94,6 +170,8 @@ ConverterTJS.prototype.convert = function (stream, cb) {
   });
 
   xml.on('end', function () {
+    if (g !== f)
+      return cb(new Error('Number of rects does not mach number of Nodes'));
     cb(null, haarStruct);
   });
 };
