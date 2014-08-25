@@ -12,74 +12,6 @@ function ConverterTJS () {
     return new ConverterTJS();
 }
 
-ConverterTJS.prototype.convertOld = function(stream, cb) {
-  if (!stream)
-    throw new Error('As stream must be passed');
-
-  var xml = new XmlStream(stream);
-  var f = 0;
-  var haarStruct = {
-    nstages: 0,
-    stages: [],
-    rects: [],
-    maxWeakCount: 0,
-    cascadeSize: {
-      width: 0,
-      height: 0
-    },
-    maxCatCount: 0
-  };
-
-  xml.collect('_');
-
-  xml.on('endElement: size', function (item) {
-    var sizes = item['$text'].split(' ');
-
-    haarStruct.cascadeSize.width = +sizes[0];
-    haarStruct.cascadeSize.height = +sizes[1];
-  });
-
-
-  xml.on('error', function (err) {
-    cb(err);
-  });
-
-
-  xml.on('endElement: stages > _', function (item) {
-    var trees = item.trees._;
-    var stage = {
-      stageThreshold: parseFloat(item.stage_threshold),
-      nodes: []
-    };
-
-    stage.nnodes = trees.length;
-
-    for (var i in trees) {
-      var tree = trees[i]._;
-      var node = {
-        "left_val": parseFloat(tree[0].left_val),
-        "right_val": parseFloat(tree[0].right_val),
-        "threshold": parseFloat(tree[0].threshold),
-        "f": f++
-      };
-
-      stage.nodes.push(node);
-
-      haarStruct.rects.push({
-        data: tree[0].feature.rects._,
-        tilted: +tree[0].feature.tilted
-      });
-    }
-
-    haarStruct.nstages++;
-    haarStruct.stages.push(stage);
-  });
-
-  xml.on('end', function () {
-    // console.log(JSON.stringify(haarStruct, undefined, 2));
-    cb(null, haarStruct);
-  });
-};
 
 /**
  * Converts the new type of opencv haarcascade
@@ -113,6 +45,13 @@ ConverterTJS.prototype.convert = function (stream, cb) {
 
   xml.collect('_');
 
+  xml.on('endElement: size', function (item) {
+    var sizes = item['$text'].split(' ');
+
+    haarStruct.cascadeSize.width = +sizes[0];
+    haarStruct.cascadeSize.height = +sizes[1];
+  });
+
   xml.on('endElement: cascade > height', function (item) {
     haarStruct.cascadeSize.height = +item['$text'];
   });
@@ -122,38 +61,71 @@ ConverterTJS.prototype.convert = function (stream, cb) {
   });
 
   xml.on('endElement: stages > _', function (item) {
-    var stage = {
-      stageThreshold: parseFloat(item.stageThreshold),
-      nodes: []
-    };
-
-    stage.nnodes = item.weakClassifiers['_'].length;
-
-    for (var i = 0 ; i < stage.nnodes; i++) {
-      var internalNodes = item
-                            .weakClassifiers['_'][i]
-                            .internalNodes.split(' ');
-      var leafValues = item
-                          .weakClassifiers['_'][i]
-                          .leafValues.split(' ');
-      var node = {
-        left_val: '',
-        right_val: '',
-        threshold: ''
+    if (!item.trees) {
+      // dealing with the new type
+      var stage = {
+        stageThreshold: parseFloat(item.stageThreshold),
+        nodes: []
       };
 
-      g++;
+      stage.nnodes = item.weakClassifiers['_'].length;
 
-      node.left_val = parseFloat(leafValues[0]);
-      node.right_val = parseFloat(leafValues[1]);
-      node.f = +internalNodes[2];
-      node.threshold = parseFloat(internalNodes[3]);
+      for (var i = 0 ; i < stage.nnodes; i++) {
+        var internalNodes = item
+                              .weakClassifiers['_'][i]
+                              .internalNodes.split(' ');
+        var leafValues = item
+                            .weakClassifiers['_'][i]
+                            .leafValues.split(' ');
+        var node = {
+          left_val: '',
+          right_val: '',
+          threshold: ''
+        };
 
-      stage.nodes.push(node);
+        g++;
+
+        node.left_val = parseFloat(leafValues[0]);
+        node.right_val = parseFloat(leafValues[1]);
+        node.f = +internalNodes[2];
+        node.threshold = parseFloat(internalNodes[3]);
+
+        stage.nodes.push(node);
+      }
+
+      haarStruct.nstages++;
+      haarStruct.stages.push(stage);
+    } else {
+      // dealing with the old type
+      var trees = item.trees._;
+      var stage = {
+        stageThreshold: parseFloat(item.stage_threshold),
+        nodes: []
+      };
+
+      stage.nnodes = trees.length;
+
+      for (var i in trees) {
+        var tree = trees[i]._;
+        var node = {
+          "left_val": parseFloat(tree[0].left_val),
+          "right_val": parseFloat(tree[0].right_val),
+          "threshold": parseFloat(tree[0].threshold),
+          "f": f++
+        };
+
+        g++;
+        stage.nodes.push(node);
+
+        haarStruct.rects.push({
+          data: tree[0].feature.rects._,
+          tilted: +tree[0].feature.tilted
+        });
+      }
+
+      haarStruct.nstages++;
+      haarStruct.stages.push(stage);
     }
-
-    haarStruct.nstages++;
-    haarStruct.stages.push(stage);
   });
 
   xml.on('endElement: features > _', function(item) {

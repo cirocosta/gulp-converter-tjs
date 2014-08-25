@@ -24,7 +24,7 @@ describe('converter\'s', function() {
   var filesPath = path.resolve(__dirname, './files');
 
   describe('convert method', function() {
-    it('should convert directly from a stream', function(done) {
+    it('should convert new type directly from a stream', function(done) {
       var stream = fs.createReadStream(filesPath + '/eye.xml',
                                        {encoding: 'utf8'});
 
@@ -35,10 +35,10 @@ describe('converter\'s', function() {
 
         assert.deepEqual(result, JSON.parse(expected));
         done();
-      })
+      });
     });
 
-    it('should convert from a fake stream', function (done) {
+    it('should convert new type from a fake stream', function (done) {
       var fileContent = fs.readFileSync(filesPath + '/eye.xml',
                                         {enconding: 'utf8'});
       var stream = createStream(fileContent);
@@ -53,7 +53,7 @@ describe('converter\'s', function() {
       });
     });
 
-    it('should throw if malformed haar cascade', function(done) {
+    it('should throw if malformed new type of haar cascade', function(done) {
       var stream = fs.createReadStream(filesPath + '/eye-malformed.xml',
                                        {encoding: 'utf8'});
 
@@ -64,14 +64,12 @@ describe('converter\'s', function() {
           done(new Error('Should throw an exception'));
       });
     });
-  });
 
-  describe('convertOld method', function() {
-    it('should convert directly from a stream', function(done) {
+    it('should convert an old type  directly from a stream', function(done) {
       var stream = fs.createReadStream(filesPath + '/leye-old.xml',
                                        {encoding: 'utf8'});
 
-      converter.convertOld(stream, function (err, result) {
+      converter.convert(stream, function (err, result) {
         if (err) done (err);
 
         var expected = fs.readFileSync(filesPath + '/leye-old.json');
