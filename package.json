@@ -1,7 +1,7 @@
 {
   "name": "gulp-converter-tjs",
   "description": "Converts new type of OpenCV HaarCascade xml data to tracking.js internal rep",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "src/converter-tjs-transform.js",
   "scripts": {
     "test": "mocha test"
