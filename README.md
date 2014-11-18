@@ -1,10 +1,10 @@
-# gulp-converter-tjs
+# gulp-converter-tjs [![Build Status](https://travis-ci.org/cirocosta/gulp-converter-tjs.svg?branch=master)](https://travis-ci.org/cirocosta/gulp-converter-tjs)
 
-> Converts new type of OpenCV HaarCascade XML data to the new one.
+> Converts new and old type of [OpenCV](https://github.com/Itseez/opencv) HaarCascade XML data to [tracking.js](https://github.com/eduardolundgren/tracking.js)' internal format.
 
 ## Process
 
-*converter-tjs* takes a XML of OpenCV training data (new type), parses it to an internal representation (JavaScript object) and then pushes to its standard output the *tracking.js* format of it.
+*converter-tjs* takes a XML of OpenCV training data (new or old type), parses it to an internal representation (JavaScript object) and then pushes to stdout the *tracking.js* representation of it.
 
 ### Example
 
