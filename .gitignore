@@ -1,3 +1,14 @@
 node_modules/
 modified_files/
+
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+build/
+
 *.log
+*.pyc
+
