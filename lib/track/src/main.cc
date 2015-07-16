@@ -1,6 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <opencv2/opencv.hpp>
+#include "Tracker.hh"
+
+#include <iostream>
+#include <cstdio>
 
 int main(int argc, char *argv[])
 {
@@ -8,17 +9,25 @@ int main(int argc, char *argv[])
 		printf("displaying\n");
 	}
 
-	cv::Mat image;
-	image = cv::imread(argv[1], 1);
+	Tracker tracker ("../assets/face/haarcascade_frontalface_alt.xml");
+	cv::Mat image = cv::imread("../assets/face/faces.png", 1);
+	std::vector<cv::Rect_<int>> faces;
 
 	if (!image.data) {
 		printf("No image data\n");
 		return -1;
 	}
 
+	tracker.detect(image, faces);
+
+	for (const auto& face : faces) {
+		std::cout << "face:" << std::endl
+							<< "\t" << face.x     << ":" << face.y      << std::endl
+						  << "\t" << face.width << ":" << face.height << std::endl;
+	}
+
 	cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
 	cv::imshow("Display Image", image);
-
 	cv::waitKey(0);
 
 	return EXIT_SUCCESS;
