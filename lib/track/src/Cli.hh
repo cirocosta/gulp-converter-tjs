@@ -22,7 +22,7 @@ static const std::string DIRECTORY = "directory";
 
 typedef std::map<std::string, std::vector<std::string> > CliArgs;
 
-static const char *HELP_TEXT =
+static const char *TRACKER_HELP_TEXT =
 	"Usage: ./tracker -f FILENAMES -c CLASSIFIERS [-d DIRECTORY]\n"
 	"\n"
 	"Options:\n"

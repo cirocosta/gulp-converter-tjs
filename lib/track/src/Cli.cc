@@ -4,7 +4,7 @@ namespace tracker {
 
 void show_help(void)
 {
-	write(STDOUT, HELP_TEXT, strlen(HELP_TEXT));
+	write(STDOUT, TRACKER_HELP_TEXT, strlen(TRACKER_HELP_TEXT));
 }
 
 CliArgs parse (const int& argc, char **argv)
