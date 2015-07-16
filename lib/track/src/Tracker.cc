@@ -1,5 +1,7 @@
 #include "Tracker.hh"
 
+namespace tracker {
+
 Tracker::Tracker (const std::string classifier_path)
 	: m_classifier(cv::CascadeClassifier(classifier_path)),
 		m_classifier_path(classifier_path)
@@ -32,4 +34,6 @@ void Tracker::detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& faces)
 	m_classifier.detectMultiScale(image, faces, scale_factor, min_neighbors,
 																flags, size);
 }
+
+}; // !ns tracker
 

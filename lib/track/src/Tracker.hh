@@ -9,6 +9,9 @@
 #include <algorithm>
 #include <vector>
 
+
+namespace tracker {
+
 class Tracker
 {
 	cv::CascadeClassifier m_classifier;
@@ -30,5 +33,7 @@ public:
 	 */
 	void detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& faces);
 };
+
+}; // !ns tracker
 
 #endif  //!TRACKER_HH

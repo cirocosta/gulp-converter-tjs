@@ -1,21 +1,20 @@
 #include "Tracker.hh"
+#include "Cli.hh"
 
 #include <iostream>
 #include <cstdio>
 
-int main(int argc, char *argv[])
-{
-	if (argc != 2) {
-		printf("displaying\n");
-	}
 
-	Tracker tracker ("../assets/face/haarcascade_frontalface_alt.xml");
+int main(const int argc, char **argv)
+{
+	tracker::parse(argc, argv);
+	tracker::Tracker tracker ("../assets/face/haarcascade_frontalface_alt.xml");
 	cv::Mat image = cv::imread("../assets/face/faces.png", 1);
 	std::vector<cv::Rect_<int>> faces;
 
 	if (!image.data) {
 		printf("No image data\n");
-		return -1;
+		exit(EXIT_FAILURE);
 	}
 
 	tracker.detect(image, faces);
@@ -25,10 +24,6 @@ int main(int argc, char *argv[])
 							<< "\t" << face.x     << ":" << face.y      << std::endl
 						  << "\t" << face.width << ":" << face.height << std::endl;
 	}
-
-	cv::namedWindow("Display Image", cv::WINDOW_AUTOSIZE);
-	cv::imshow("Display Image", image);
-	cv::waitKey(0);
 
 	return EXIT_SUCCESS;
 }
