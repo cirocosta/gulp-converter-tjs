@@ -1,4 +1,6 @@
 #include "opencv2/opencv.hpp"
+
+#include <vector>
 #include <iostream>
 
 using cv::WINDOW_NORMAL;
@@ -15,31 +17,38 @@ using cv::Mat;
 Mat src;
 Mat img;
 
+// Current rectangle and start&end points
 Rect rect (0, 0, 0, 0);
 Point P1 (0, 0);
 Point P2 (0, 0);
+
+// Rectangles to be outputted
+std::vector<Rect> rects;
 
 static const char* WINDOW_NAME = "Tracking Info Generator";
 static bool clicked = false;
 
 
 void fixBoundaries(){
-	if(rect.width > img.cols-rect.x)
-	  rect.width = img.cols-rect.x;
+	if (rect.width > img.cols - rect.x)
+	  rect.width = img.cols - rect.x;
 
-	if(rect.height > img.rows-rect.y)
-		rect.height = img.rows-rect.y;
+	if (rect.height > img.rows - rect.y)
+		rect.height = img.rows - rect.y;
 
-	if(rect.x < 0)
+	if (rect.x < 0)
 		rect.x = 0;
 
-	if(rect.y < 0)
+	if (rect.y < 0)
 		rect.height = 0;
 }
 
 void draw(){
 	img = src.clone();
 	fixBoundaries();
+
+	for (const auto& r : rects)
+		rectangle(img, r, Scalar(0,255,0), 1, 8, 0 );
 	rectangle(img, rect, Scalar(0,255,0), 1, 8, 0 );
 
 	imshow(WINDOW_NAME, img);
@@ -103,9 +112,23 @@ int main()
     while (1) {
 			char c = waitKey();
 
-			if (c == 's') {
-				std::cout << rect.x + rect.width/2 << " "
-								  << rect.y + rect.height/2 << std::endl;
+			switch (c) {
+				case 's':
+					if (rects.empty()) {
+						std::cerr << "No rect added." << std::endl
+											<< "Select an area and press 'a' to add!" << std::endl;
+						continue;
+					}
+
+					for (const auto& r : rects) {
+						std::cout << r.x + r.width/2 << " "
+											<< r.y + r.height/2 << std::endl;
+					}
+					break;
+				case 'a':
+					rects.push_back(rect);
+					rect = Rect(0, 0, 0, 0);
+					break;
 			}
     }
 
