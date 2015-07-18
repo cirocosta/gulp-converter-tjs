@@ -1,4 +1,4 @@
-#include "Tracker.hh"
+#include "tracker/Tracker.hh"
 #include "cli/CliTracker.hh"
 
 #include <iostream>
@@ -8,6 +8,7 @@ using tracker::tracker::CliTracker;
 using tracker::Tracker;
 using tracker::tracker::FILENAMES;
 using tracker::tracker::CLASSIFIER;
+using tracker::tracker::SHOW;
 
 
 int main(const int argc, char **argv)
@@ -18,6 +19,7 @@ int main(const int argc, char **argv)
 	cv::Mat image;
 	Tracker tracker (cli.args[CLASSIFIER].front());
 	std::vector<cv::Rect_<int>> faces;
+	bool show = cli.args[SHOW].size() > 0;
 
 	for (const auto& fname : cli.args[FILENAMES]) {
 		image = cv::imread(fname, 1);
@@ -35,7 +37,8 @@ int main(const int argc, char **argv)
 								<< face.y + face.height/2 << std::endl;
 		}
 
-		tracker.draw_objs(image, faces);
+		if (show)
+			tracker.draw_objs(image, faces);
 	}
 
 	return EXIT_SUCCESS;

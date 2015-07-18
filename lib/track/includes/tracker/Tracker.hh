@@ -1,5 +1,5 @@
-#ifndef TRACKER_HH
-#define TRACKER_HH
+#ifndef TRACKER__TRACKER_HH
+#define TRACKER__TRACKER_HH
 
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -24,13 +24,14 @@ public:
 public:
 	Tracker (const std::string classifier_path);
 	Tracker (const std::string cp, const double sf, const int mn, const int f,
-						const cv::Size s);
+					 const cv::Size s);
 	~Tracker();
 
-	void draw_objs (const cv::Mat& image, const std::vector<cv::Rect_<int>>& objs) const;
+	void draw_objs (const cv::Mat& image,
+									const std::vector<cv::Rect_<int>>& objs) const;
 	void detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& objs);
 };
 
 }; // !ns tracker
 
-#endif  //!TRACKER_HH
+#endif

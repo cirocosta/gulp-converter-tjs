@@ -6,7 +6,8 @@ CliTracker::CliTracker()
 {
 	args = CliArgs {
 		{CLASSIFIER, std::vector<std::string> ()},
-		{FILENAMES,		std::vector<std::string> ()}
+		{FILENAMES,		std::vector<std::string> ()},
+		{SHOW, std::vector<std::string> ()}
 	};
 }
 
@@ -23,8 +24,12 @@ void CliTracker::parse (const int& argc, char **argv)
 	int c;
   opterr = 0;
 
-  while ((c = getopt (argc, argv, "c:f:h")) != -1) {
+  while ((c = getopt (argc, argv, "c:f:sh")) != -1) {
     switch (c) {
+      case 's':
+				args[SHOW].push_back("yes");
+        break;
+
       case 'c':
 				args[CLASSIFIER].push_back(argv[--optind]);
         break;

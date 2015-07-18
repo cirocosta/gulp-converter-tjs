@@ -21,5 +21,6 @@ endif()
 find_package(OpenCV REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR} ${OpenCV_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/includes ${OpenCV_INCLUDE_DIRS})
 add_subdirectory(src/)
 

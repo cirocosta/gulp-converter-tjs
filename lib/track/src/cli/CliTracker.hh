@@ -21,6 +21,7 @@ public:
 
 static const std::string CLASSIFIER = "classifier";
 static const std::string FILENAMES = "filenames";
+static const std::string SHOW = "show";
 
 static const char *HELP_TEXT =
 	"Usage: ./tracker -f FILENAMES -c CLASSIFIER\n"
@@ -28,6 +29,7 @@ static const char *HELP_TEXT =
 	"Options:\n"
 	"  -c\thaarcascade classifier filename\n"
 	"  -f\tone (or several) input filename(s)\n"
+	"	 -s\tshow result w/ rectangles in image\n"
 	"	 -h\tshow this message\n"
 	"\n"
 	"Examples:\n"
