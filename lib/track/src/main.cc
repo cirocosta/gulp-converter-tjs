@@ -1,28 +1,41 @@
 #include "Tracker.hh"
-#include "Cli.hh"
+#include "cli/CliTracker.hh"
 
 #include <iostream>
 #include <cstdio>
 
+using tracker::tracker::CliTracker;
+using tracker::Tracker;
+using tracker::tracker::FILENAMES;
+using tracker::tracker::CLASSIFIER;
+
 
 int main(const int argc, char **argv)
 {
-	tracker::parse(argc, argv);
-	tracker::Tracker tracker ("../assets/face/haarcascade_frontalface_alt.xml");
-	cv::Mat image = cv::imread("../assets/face/faces.png", 1);
+	CliTracker cli;
+	cli.parse(argc, argv);
+
+	cv::Mat image;
+	Tracker tracker (cli.args[CLASSIFIER].front());
 	std::vector<cv::Rect_<int>> faces;
 
-	if (!image.data) {
-		printf("No image data\n");
-		exit(EXIT_FAILURE);
-	}
+	for (const auto& fname : cli.args[FILENAMES]) {
+		image = cv::imread(fname, 1);
 
-	tracker.detect(image, faces);
+		if (!image.data) {
+			std::cerr << "Error:\n"
+								<< "\t" << fname << " not found." << std::endl;
+			exit(EXIT_FAILURE);
+		}
 
-	for (const auto& face : faces) {
-		std::cout << "face:" << std::endl
-							<< "\t" << face.x     << ":" << face.y      << std::endl
-						  << "\t" << face.width << ":" << face.height << std::endl;
+		tracker.detect(image, faces);
+
+		for (const auto& face : faces) {
+			std::cout << face.x + face.width/2 << " "
+								<< face.y + face.height/2 << std::endl;
+		}
+
+		tracker.draw_objs(image, faces);
 	}
 
 	return EXIT_SUCCESS;

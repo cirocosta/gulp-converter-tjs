@@ -27,11 +27,8 @@ public:
 						const cv::Size s);
 	~Tracker();
 
-	/**
-	 * Performs the main step. Paralellizable by
-	 * TBB if set when building from source.
-	 */
-	void detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& faces);
+	void draw_objs (const cv::Mat& image, const std::vector<cv::Rect_<int>>& objs) const;
+	void detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& objs);
 };
 
 }; // !ns tracker

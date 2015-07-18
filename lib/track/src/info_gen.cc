@@ -1,4 +1,7 @@
 #include "opencv2/opencv.hpp"
+#include "cli/CliInfoGen.hh"
+
+using tracker::infogen::CliInfoGen;
 
 #include <vector>
 #include <iostream>
@@ -14,7 +17,7 @@ using cv::Scalar;
 using cv::rectangle;
 using cv::Mat;
 
-Mat src;
+Mat source_image;
 Mat img;
 
 // Current rectangle and start&end points
@@ -29,9 +32,9 @@ static const char* WINDOW_NAME = "Tracking Info Generator";
 static bool clicked = false;
 
 
-void fixBoundaries(){
+void fixBoundaries () {
 	if (rect.width > img.cols - rect.x)
-	  rect.width = img.cols - rect.x;
+		rect.width = img.cols - rect.x;
 
 	if (rect.height > img.rows - rect.y)
 		rect.height = img.rows - rect.y;
@@ -43,13 +46,14 @@ void fixBoundaries(){
 		rect.height = 0;
 }
 
-void draw(){
-	img = src.clone();
+void draw (){
+	img = source_image.clone();
 	fixBoundaries();
 
 	for (const auto& r : rects)
 		rectangle(img, r, Scalar(0,255,0), 1, 8, 0 );
-	rectangle(img, rect, Scalar(0,255,0), 1, 8, 0 );
+	if (clicked)
+		rectangle(img, rect, Scalar(0,255,0), 1, 8, 0 );
 
 	imshow(WINDOW_NAME, img);
 }
@@ -69,6 +73,8 @@ void onMouse(int event, int x, int y, int f, void*){
 			clicked = false;
 			P2.x = x;
 			P2.y = y;
+			rects.push_back(rect);
+			rect = Rect(0, 0, 0, 0);
 			break;
 
 		case CV_EVENT_MOUSEMOVE:
@@ -101,37 +107,46 @@ void onMouse(int event, int x, int y, int f, void*){
 	draw();
 }
 
-int main()
+int main(const int argc, char *argv[])
 {
-    src = imread("../assets/face/faces.png", 1);
+	CliInfoGen cli;
+	cli.parse(argc, argv);
 
-    namedWindow(WINDOW_NAME, WINDOW_NORMAL);
-    setMouseCallback(WINDOW_NAME, onMouse, NULL );
-    imshow(WINDOW_NAME, src);
+	source_image = imread(cli.args[tracker::infogen::FILENAME].front(), 1);
 
-    while (1) {
-			char c = waitKey();
+	namedWindow(WINDOW_NAME, WINDOW_NORMAL);
+	setMouseCallback(WINDOW_NAME, onMouse, NULL );
+	imshow(WINDOW_NAME, source_image);
 
-			switch (c) {
-				case 's':
-					if (rects.empty()) {
-						std::cerr << "No rect added." << std::endl
-											<< "Select an area and press 'a' to add!" << std::endl;
-						continue;
-					}
+	while (1) {
+		char c = waitKey();
 
-					for (const auto& r : rects) {
-						std::cout << r.x + r.width/2 << " "
-											<< r.y + r.height/2 << std::endl;
-					}
+		switch (c) {
+			case 'd':
+				if (rects.empty())
 					break;
-				case 'a':
-					rects.push_back(rect);
-					rect = Rect(0, 0, 0, 0);
-					break;
-			}
-    }
 
-    return 0;
+				rects.pop_back();
+				rect = Rect(0, 0, 0, 0);
+				draw();
+				break;
+
+			case 's':
+				if (rects.empty()) {
+					std::cerr << "No rect added." << std::endl
+						<< "Select an area and press 'a' to add!"
+						<< std::endl;
+					continue;
+				}
+
+				for (const auto& r : rects) {
+					std::cout << r.x + r.width/2 << " "
+						<< r.y + r.height/2 << std::endl;
+				}
+				exit(EXIT_SUCCESS);
+		}
+	}
+
+	return 0;
 }
 

@@ -35,5 +35,17 @@ void Tracker::detect (const cv::Mat& image, std::vector<cv::Rect_<int>>& faces)
 																flags, size);
 }
 
+void Tracker::draw_objs (const cv::Mat& image,
+												 const std::vector<cv::Rect_<int>>& objs) const
+{
+	cv::Mat img = image.clone();
+
+	for (const auto& obj : objs)
+		cv::rectangle(img, obj, cv::Scalar(0, 255, 0), 1, 8, 0);
+	cv::imshow("Result", img);
+
+	while (1) cv::waitKey();
+}
+
 }; // !ns tracker
 
