@@ -45,6 +45,9 @@ std::vector<Rect_<int>> rects;
  * Given expected rect centers, image source and
  * classifier, tweaks some parameters to try to
  * minimize the distance to the expected.
+ *
+ * scale_factor		:	[1.0:2.0:0.1]
+ * min_neighbors	:	[0:10:1]
  */
 int main(const int argc, char *argv[])
 {
@@ -57,28 +60,46 @@ int main(const int argc, char *argv[])
 	Mat image = imread(cli.args[FILENAME].front());
 	std::ifstream expected (cli.args[EXPECTED].front());
 
+	if (!expected.good()) {
+		std::cerr << "Error trying to read " << cli.args[EXPECTED].front()
+							<< std::endl;
+		exit(EXIT_FAILURE);
+	}
+
 	while (expected >> x, expected >> y) {
 		expected_points.push_back(Point {x, y});
 		std::cout << expected_points.back() << std::endl;
 	}
 
-	tracker.detect(image, rects);
+	for (double scale_factor = 1.01; scale_factor <= 2.0; scale_factor += 0.2) {
+		for (int min_neighbors = 1; min_neighbors <= 10; min_neighbors += 1) {
+			float sum_dist = 0.0;
+			unsigned num_detected;
 
-	for (const auto& rect : rects) {
-		Point p {
-				std::floor(rect.x + rect.width/2),
-				std::floor(rect.y + rect.height/2)
-		};
+			tracker.scale_factor = scale_factor;
+			tracker.min_neighbors = min_neighbors;
+			tracker.detect(image, rects);
+			num_detected = rects.size();
 
-		std::sort(expected_points.begin(), expected_points.end(),
-							[&p](const Point& p1, const Point&p2) -> bool {
-			return p1.distance(p) < p2.distance(p);
-		});
+			for (const auto& rect : rects) {
+				Point p {
+						std::floor(rect.x + rect.width/2),
+						std::floor(rect.y + rect.height/2)
+				};
 
-		std::cout <<  p.distance(expected_points.front()) << " : "
-			<< p << " compared to " << expected_points.front() << std::endl;
+				std::sort(expected_points.begin(), expected_points.end(),
+									[&p](const Point& p1, const Point&p2) -> bool {
+					return p1.distance(p) < p2.distance(p);
+				});
+
+				sum_dist += p.distance(expected_points.front());
+			}
+
+			rects.clear();
+			std::cout << min_neighbors << " : " << scale_factor << " = " << sum_dist
+				<< " | num: " << num_detected << std::endl;
+		}
 	}
-
 
 	return 0;
 }
